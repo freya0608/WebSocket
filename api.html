@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="output"></div>
+</body>
+<script>
+    function setup() {
+        output = document.getElementById('output');
+        ws = new WebSocket('ws://echo.websocket.org/echo');
+        ws.onopen = function (e) {
+            log('connected');
+            sendMessage('hello webSocket');
+        };
+        ws.onclose = function (e) {
+            log('disconnected:'+e.reason);
+        };
+        ws.onerror = function (e) {
+            log('error:'+e.error);
+        };
+        ws.onmessage = function (e) {
+            log('message received'+e.data);
+            ws.close();
+        };
+    }
+
+    function sendMessage(msg) {
+        ws.send(msg);
+        log('message sent');
+    }
+    function log(s) {
+        var p = document.createElement('p');
+        p.style.wordWrap = 'break-word';
+        p.textContent = s;
+        output.appendChild(p);
+        console.log(s);
+
+    }
+    setup();
+
+</script>
+</html>
